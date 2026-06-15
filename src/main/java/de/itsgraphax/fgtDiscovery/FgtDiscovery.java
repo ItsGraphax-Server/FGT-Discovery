@@ -17,7 +17,7 @@ import java.util.Set;
 public final class FgtDiscovery extends JavaPlugin {
     private static FgtDiscovery instance;
 
-    private final Namespaces namespaces = new Namespaces();
+    private Namespaces namespaces;
     private final RichText.RichConfigText richText = new RichText.RichConfigText(this);
     private PdcData pdcData;
 
@@ -34,6 +34,7 @@ public final class FgtDiscovery extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        namespaces = new Namespaces();
         pdcData = new PdcData();
 
         saveDefaultConfig();

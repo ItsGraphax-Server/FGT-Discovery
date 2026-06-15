@@ -1,6 +1,6 @@
 package de.itsgraphax.fgtDiscovery.commands;
 
-import de.itsgraphax.fgtDiscovery.FgtDiscovery;
+import de.itsgraphax.fgtDiscovery.HasPlugin;
 import de.itsgraphax.fgtDiscovery.serverInfo.PlayerSample;
 import de.itsgraphax.fgtDiscovery.serverInfo.ServerInfo;
 import de.itsgraphax.fgtDiscovery.util.ServerConnectionData;
@@ -10,8 +10,10 @@ import net.strokkur.commands.paper.Description;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
-import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,10 +21,22 @@ import java.util.stream.Collectors;
 
 @Command("playerlist")
 @Description("Get the list of online players on a server")
-public class PlayerList {
+public class PlayerList extends HasPlugin {
     @Executes()
     void playerList(CommandSender sender, @Join.JoinServerSuggestions String server) {
-        FgtDiscovery plugin = FgtDiscovery.getInstance();
+        if (sender instanceof Player p) {
+            LocalDateTime lastExecute = plugin.pdcData().lastPlayerlistUse(p);
+            if (Duration.between(lastExecute, LocalDateTime.now()).toSeconds() < 3) {
+                p.sendMessage(rt.fromConfig("playerlist-cooldown"));
+                return;
+            }
+            plugin.pdcData().lastPlayerlistUse(p, LocalDateTime.now());
+        }
+
+        plugin.getServer().getAsyncScheduler().runNow(plugin, _ -> playerListTask(sender, server));
+    }
+
+    private void playerListTask(CommandSender sender, String server) {
         FileConfiguration config = plugin.getConfig();
 
         ConfigurationSection serverConfig = config.getConfigurationSection(String.format("servers.%s", server));
@@ -43,7 +57,7 @@ public class PlayerList {
         ServerInfo serverInfo;
         try {
             serverInfo = ServerInfo.request(connectionData);
-        } catch (IOException e) {
+        } catch (Exception e) {
             sender.sendMessage(plugin.richText().fromConfig("playerlist-no-respond"));
             plugin.getComponentLogger().warn("error requesting server status: {}", String.valueOf(e));
             return;
@@ -60,13 +74,10 @@ public class PlayerList {
                 "PLAYERS", serverInfo.players().toString(),
                 "ONLINE_PLAYERS", Objects.requireNonNull(
                         sample.stream()
-                        .map(PlayerSample::name)
-                        .collect(Collectors.joining("\n    ")),
+                                .map(PlayerSample::name)
+                                .collect(Collectors.joining("\n    ")),
                         "")
         ));
-
-
-
     }
 
 }
