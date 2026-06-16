@@ -6,6 +6,9 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
+
 public class PdcData extends PdcDataBase {
     private final Namespaces namespaces = FgtDiscovery.getInstance().namespaces();
 
@@ -32,5 +35,19 @@ public class PdcData extends PdcDataBase {
                 pdc.get(namespaces.customServerPort(slot), PersistentDataType.INTEGER),
                 String.format("Custom%s", slot)
         );
+    }
+
+    public void lastPlayerlistUse(PersistentDataHolder holder, LocalDateTime ldt) {
+        pdc(holder).set(namespaces.lastPlayerlistUse(), PersistentDataType.STRING, ldt.toString());
+    }
+
+    public LocalDateTime lastPlayerlistUse(PersistentDataHolder holder) {
+        try {
+            return LocalDateTime.parse(
+                    pdc(holder).getOrDefault(namespaces.lastPlayerlistUse(), PersistentDataType.STRING, LocalDateTime.MIN.toString())
+            );
+        } catch (DateTimeParseException e) {
+            return LocalDateTime.MIN;
+        }
     }
 }

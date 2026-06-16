@@ -1,7 +1,8 @@
 package de.itsgraphax.fgtDiscovery.serverInfo;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 import de.itsgraphax.fgtDiscovery.util.PacketHelper;
 import de.itsgraphax.fgtDiscovery.util.ServerConnectionData;
@@ -36,13 +37,15 @@ public final class ServerInfo {
     public Integer players() {
         return players;
     }
+
     public List<PlayerSample> sample() {
         return sample;
     }
 
 
     public static ServerInfo fromRawJson(String rawJson) {
-        Type type = new TypeToken<ServerInfo>() {}.getType();
+        Type type = new TypeToken<ServerInfo>() {
+        }.getType();
 
         JsonObject root = JsonParser.parseString(rawJson).getAsJsonObject();
         JsonObject user = root.getAsJsonObject("players");
@@ -60,6 +63,7 @@ public final class ServerInfo {
      * requests "Server Info" with the "Status" packet from another server and returns it.
      * This is adapted from <a href="https://gist.github.com/zh32/7190955">here</a>
      * (see also <a href="https://minecraft.wiki/w/Java_Edition_protocol/Server_List_Ping">mc wiki link</a>
+     *
      * @throws IOException if something with the connection doesn't work
      */
     public static ServerInfo request(ServerConnectionData connectionData) throws IOException {
@@ -90,8 +94,10 @@ public final class ServerInfo {
             PacketHelper.writeVarInt(outStream, 1);
             PacketHelper.writeVarInt(outStream, 0x00);
 
-            /*int inPacktLength =*/ PacketHelper.readVarInt(inStream);
-            /*int inPacketId =*/ PacketHelper.readVarInt(inStream);
+            /*int inPacktLength =*/
+            PacketHelper.readVarInt(inStream);
+            /*int inPacketId =*/
+            PacketHelper.readVarInt(inStream);
 
             int inDataLength = PacketHelper.readVarInt(inStream);
             byte[] inDataBytes = new byte[inDataLength];

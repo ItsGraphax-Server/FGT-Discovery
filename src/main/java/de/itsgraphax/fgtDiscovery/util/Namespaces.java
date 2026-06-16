@@ -16,4 +16,8 @@ public class Namespaces extends NamespacesBase {
     public NamespacedKey customServerPort(int slot) {
         return key(String.format("customServer.%s.port", slot));
     }
+
+    public NamespacedKey lastPlayerlistUse() {
+        return key("lastPlayerlistUse");
+    }
 }
