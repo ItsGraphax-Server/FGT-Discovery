@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 @Aliases("c")
 @Description("Join or set a Custom server")
 
-public class Custom extends HasPlugin {
+public class Custom implements HasPlugin {
 
     @Executes
     void join(@Executor Player player, int slot) {

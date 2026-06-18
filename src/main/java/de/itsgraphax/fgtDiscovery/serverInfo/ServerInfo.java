@@ -24,6 +24,7 @@ public final class ServerInfo {
     private int maxPlayers;
     @SerializedName("online")
     private int players;
+    @SerializedName("sample")
     private List<PlayerSample> sample;
 
     public Motd motd() {
@@ -106,9 +107,6 @@ public final class ServerInfo {
             String inData = new String(inDataBytes);
 
             return fromRawJson(inData);
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

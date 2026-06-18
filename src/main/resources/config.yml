@@ -20,6 +20,9 @@ strings:
   playerlist-list: "There are currently <blue><bold>{{PLAYERS}}<reset> players online in {{SERVER}}:<yellow>\n    {{ONLINE_PLAYERS}}"
   playerlist-no-respond: "<red>The server didn't responded to the status request"
   playerlist-cooldown: "<red>Please wait a bit before using this command again!"
+  playerlist-textdisplay-loading: "<orange>Loading..."
+  playerlist-textdisplay-list: "<blue><bold>{{PLAYERS}}<reset> online:\n{{ONLINE_PLAYERS}}"
+  playerlist-textdisplay-unkown: "<red>Unknown"
 
   custom-no-data: "<red>There is no server stored in this slot!"
   custom-already-data: "<red>There is already a server stored in this slot!"

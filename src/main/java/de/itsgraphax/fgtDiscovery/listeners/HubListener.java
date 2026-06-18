@@ -1,17 +1,23 @@
 package de.itsgraphax.fgtDiscovery.listeners;
 
 import de.itsgraphax.fgtDiscovery.FgtDiscovery;
+import de.itsgraphax.fgtDiscovery.HasPlugin;
 import de.itsgraphax.fgtDiscovery.util.HubUtil;
+import de.itsgraphax.fgtDiscovery.util.PlayerTransporter;
 import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.server.PluginDisableEvent;
 
-public class HubListener implements Listener {
+import static de.itsgraphax.fgtDiscovery.commands.SummonPlayerList.updatePlayerListDisplays;
+
+public class HubListener implements Listener, HasPlugin {
     @EventHandler
     private void onInteract(PlayerInteractEvent event) {
         Block interactedBlock = event.getClickedBlock();
@@ -36,9 +42,22 @@ public class HubListener implements Listener {
             ConfigurationSection spawnLocConfig = FgtDiscovery.getInstance().getConfig();
 
             event.getPlayer().teleport(new Location(plugin.getServer().getRespawnWorld(),
-                    spawnLocConfig.getInt("x", 0)+0.5,
-                    spawnLocConfig.getInt("y", 0)+0.5,
-                    spawnLocConfig.getInt("z", 0)+0.5));
+                    spawnLocConfig.getInt("x", 0) + 0.5,
+                    spawnLocConfig.getInt("y", 0) + 0.5,
+                    spawnLocConfig.getInt("z", 0) + 0.5));
+        }
+        updatePlayerListDisplays();
+    }
+
+    @EventHandler
+    void onDisable(PluginDisableEvent e) {
+        FgtDiscovery plugin = FgtDiscovery.getInstance();
+        if (e.getPlugin() != plugin ||
+                !plugin.getServer().isStopping() ||
+                !e.getPlugin().getConfig().getBoolean("hub-on-stop", false)) return;
+
+        for (Player p : plugin.getServer().getOnlinePlayers()) {
+            PlayerTransporter.hub(p);
         }
     }
 }

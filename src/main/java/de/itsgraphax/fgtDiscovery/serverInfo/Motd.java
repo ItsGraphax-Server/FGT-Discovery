@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
  * corresponds the "description" in the ServerInfo packet
  */
 public final class Motd {
+    @SerializedName("text")
     private String text;
     @SerializedName("extra")
     private Component component;
