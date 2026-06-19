@@ -6,8 +6,11 @@ import io.papermc.paper.event.player.PlayerItemFrameChangeEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Painting;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
@@ -27,6 +30,13 @@ public class HubListener implements Listener {
     @EventHandler
     private void onItemFrame(PlayerItemFrameChangeEvent event) {
         if (HubUtil.isAdventureEvent(event) && HubUtil.hubEnabled()) event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void onPainting(HangingBreakByEntityEvent event) {
+        if (event.getRemover() instanceof Player player) {
+            if (event.getEntity() instanceof Painting && HubUtil.isAdventure(player) && HubUtil.hubEnabled()) event.setCancelled(true);
+        }
     }
 
     @EventHandler
