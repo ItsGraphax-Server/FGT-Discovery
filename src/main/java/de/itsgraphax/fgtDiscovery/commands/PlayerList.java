@@ -23,7 +23,7 @@ public class PlayerList implements HasPlugin {
     void playerList(@Executor Player player, @Join.JoinServerSuggestions String server) {
         LocalDateTime lastExecute = plugin.pdcData().lastPlayerlistUse(player);
         if (Duration.between(lastExecute, LocalDateTime.now()).toSeconds() < 3) {
-            player.sendMessage(rt.fromConfig("playerlist-cooldown"));
+            player.sendMessage(rt.fromConfig("playerlist.cooldown"));
             return;
         }
         plugin.pdcData().lastPlayerlistUse(player, LocalDateTime.now());
@@ -39,23 +39,22 @@ public class PlayerList implements HasPlugin {
         try {
             serverInfo = ServerInfo.request(connectionData);
         } catch (Exception e) {
-            player.sendMessage(rt.fromConfig("playerlist-no-respond"));
+            player.sendMessage(rt.fromConfig("playerlist.no-respond"));
             plugin.getComponentLogger().warn("error requesting server status: {}", String.valueOf(e));
             return;
 
         }
 
-        player.sendMessage(rt.fromConfig("playerlist-list",
+        player.sendMessage(rt.fromConfig("playerlist.list",
                 "SERVER", connectionData.name(),
-                "PLAYERS", serverInfo.players().toString(),
-                "ONLINE_PLAYERS",
-                Objects.requireNonNullElse(
-                                serverInfo.sample(),
-                                new ArrayList<PlayerSample>()
+                "ONLINE_PLAYERS_COUNT", serverInfo.players().toString(),
+                "ONLINE_PLAYERS", Objects.requireNonNullElse(
+                            serverInfo.sample(),
+                            new ArrayList<PlayerSample>()
                         )
-                .stream()
-                .map(PlayerSample::name)
-                .collect(Collectors.joining("\n    ")
+                        .stream()
+                        .map(PlayerSample::name)
+                        .collect(Collectors.joining("\n    ")
 
         )));
     }
