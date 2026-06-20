@@ -99,7 +99,7 @@ public class SummonPlayerList implements HasPlugin {
                 info.sample(),
                 new ArrayList<>()
         );
-        if (sample.size() > 3) {
+        if (sample.size() > plugin.getConfig().getInt("playerlist.max-display")) {
             sample = sample.subList(0, plugin.getConfig().getInt("playerlist.max-display"));
         }
         return sample
