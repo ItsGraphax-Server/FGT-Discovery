@@ -20,4 +20,8 @@ public class Namespaces extends NamespacesBase {
     public NamespacedKey lastPlayerlistUse() {
         return key("lastPlayerlistUse");
     }
+
+    public NamespacedKey playerlistDisplay() {
+        return key("playerlistDisplay");
+    }
 }

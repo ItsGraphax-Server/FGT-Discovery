@@ -3,7 +3,6 @@ package de.itsgraphax.fgtDiscovery;
 import de.itsgraphax.fgtDiscovery.commands.*;
 import de.itsgraphax.fgtDiscovery.listeners.HubListener;
 import de.itsgraphax.fgtDiscovery.listeners.JoinQuitMessage;
-import de.itsgraphax.fgtDiscovery.listeners.StopListener;
 import de.itsgraphax.fgtDiscovery.tick.HubTick;
 import de.itsgraphax.fgtDiscovery.util.Namespaces;
 import de.itsgraphax.fgtDiscovery.util.PdcData;
@@ -44,6 +43,7 @@ public final class FgtDiscovery extends JavaPlugin {
                 JoinBrigadier::register,
                 CustomBrigadier::register,
                 PlayerListBrigadier::register,
+                SummonPlayerListBrigadier::register,
                 c -> {
                     if (getConfig().getBoolean("enable-hub", false)) {
                         HubBrigadier.register(c);
@@ -52,8 +52,7 @@ public final class FgtDiscovery extends JavaPlugin {
         ), this);
         OnEnable.registerEvents(Set.of(
                 new JoinQuitMessage(),
-                new HubListener(),
-                new StopListener()
+                new HubListener()
         ), this);
         startTickTasks();
     }

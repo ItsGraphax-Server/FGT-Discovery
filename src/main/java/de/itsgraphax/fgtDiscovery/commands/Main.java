@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 @Command("discovery")
 @Description("Operator Commands")
 @RequiresOP
-public class Main extends HasPlugin {
+public class Main implements HasPlugin {
     @Executes("reload")
     void reload(CommandSender sender) {
         plugin.reloadConfig();
