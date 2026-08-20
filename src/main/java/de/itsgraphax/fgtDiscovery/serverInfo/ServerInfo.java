@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import de.itsgraphax.fgtDiscovery.util.PacketHelper;
 import de.itsgraphax.fgtDiscovery.util.ServerConnectionData;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -45,7 +46,7 @@ public final class ServerInfo {
 
 
     public static ServerInfo fromRawJson(String rawJson) {
-        Type type = new TypeToken<ServerInfo>() {
+        Type type = new TypeToken<@NotNull ServerInfo>() {
         }.getType();
 
         JsonObject root = JsonParser.parseString(rawJson).getAsJsonObject();

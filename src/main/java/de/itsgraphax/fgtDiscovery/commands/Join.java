@@ -14,6 +14,7 @@ import net.strokkur.commands.CustomSuggestion;
 import net.strokkur.commands.Executes;
 import net.strokkur.commands.paper.Executor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
@@ -35,8 +36,12 @@ public class Join {
     @JoinServerSuggestions
     public static class JoinServerSuggestionsImpl implements SuggestionProvider<CommandSourceStack> {
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<CommandSourceStack> ctx, SuggestionsBuilder builder) {
-            Set<String> suggestions = FgtDiscovery.getInstance().getConfig()
-                    .getConfigurationSection("servers").getKeys(false);
+            ConfigurationSection servers = FgtDiscovery.getInstance().getConfig()
+                    .getConfigurationSection("servers");
+
+            if (servers == null) throw new RuntimeException();
+
+            Set<String> suggestions = servers.getKeys(false);
 
             suggestions.stream()
                     .filter(str -> str.toLowerCase().startsWith(builder.getRemainingLowerCase()))
